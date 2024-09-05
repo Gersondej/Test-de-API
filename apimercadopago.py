@@ -12,9 +12,9 @@ def gerar_link_pagamento():
     payment_data = {
         "items": [ 
         {"id": "1", "title": "Relogio citzen eco drive", "quantity": 1, "currecy_id": "BLR", "unit_price": 149.99}],  "back_urls": {
-        "success": "fhttps://github.com/Gersondej/Test-de-API/compracerta",
-        "failure": "https://github.com/Gersondej/Test-de-API/compraerrada",
-        "pending": "https://github.com/Gersondej/Test-de-API/compraerrada"
+        "success": "https://gersondej.github.io/API-MERCADO-PAGO-COMPRACERTA/",
+        "failure": "https://gersondej.github.io/API-MERCADO-PAGO-COMPRAERRADA/",
+        "pending": "https://gersondej.github.io/API-MERCADO-PAGO-COMPRAERRADA/"
         },
         "auto_return": "all"
         }
