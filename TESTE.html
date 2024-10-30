@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulário de Pagamento</title>
+  <style>
+    .desicao-pagamento {
+      width: 30%;
+    }
+
+    .descricao-pagamento h3 {
+      color: rgb(140, 140, 140);
+    }
+    .descricao-pagamento h3 {
+      color: black;
+      font-size: 100px;
+      position: 10px;
+    }
+    body { font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+    form { width: 300px; padding: 20px; border: 1px solid #ccc; border-radius: 5px; }
+    label { display: block; margin-bottom: 8px; }
+    input[type="text"], input[type="number"] { width: 100%; padding: 8px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 3px; }
+    button { width: 100%; padding: 10px; background-color: #28a745; color: white; border: none; border-radius: 3px; cursor: pointer; }
+    button:hover { background-color: #218838; }
+  </style>
+</head>
+<body>
+
+<div class="descricao-pagamento">
+  <h3>BrechóSim</h3> 
+</div>
+
+<form id="payment-form">
+  <h3>Pagamento com Cartão de Crédito</h3>
+
+  <label for="card-number">Número do Cartão</label>
+  <input type="text" id="card-number" placeholder="Número do Cartão" required>
+
+  <label for="card-holder-name">Nome do Titular</label>
+  <input type="text" id="card-holder-name" placeholder="Nome do Titular" required>
+
+  <label for="card-expiration-date">Data de Expiração (MM/AA)</label>
+  <input type="text" id="card-expiration-date" placeholder="MM/AA" required>
+
+  <label for="card-cvv">CVV</label>
+  <input type="number" id="card-cvv" placeholder="CVV" required>
+
+  <button type="button" onclick="processPayment()">Pagar</button>
+</form>
+
+<script>
+  async function processPayment() {
+    const apiKey ="acc_xrOwpxOTrtk4wDd2ve"; 
+  
+
+    // Captura os valores dos campos do formulário
+    const cardNumber = document.getElementById("card-number").value;
+    const cardHolderName = document.getElementById("card-holder-name").value;
+    const cardExpirationDate = document.getElementById("card-expiration-date").value;
+    const cardCvv = document.getElementById("card-cvv").value;
+    const amount = 1000; // Valor em centavos (ex: 1000 centavos = R$10,00)
+
+    const [expMonth, expYear] = cardExpirationDate.split('/');
+
+    const paymentData = {
+      api_key: apiKey,
+      amount: amount,
+      card_number: cardNumber,
+      card_cvv: cardCvv,
+      card_expiration_date: expMonth + expYear,
+      card_holder_name: cardHolderName,
+      customer: {
+        external_id: "#123456",
+        name: cardHolderName,
+        type: "individual",
+        country: "br",
+        email: "cliente@exemplo.com",
+        documents: [
+          {
+            type: "cpf",
+            number: "00000000000" // CPF fictício de teste
+          }
+        ],
+        phone_numbers: ["+5511999999999"]
+      }
+    };
+
+    try {
+      // Requisição para a API da Pagar.me
+      const response = await fetch("https://api.pagar.me/1/transactions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(paymentData)
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert("Pagamento aprovado! ID da transação: " + data.id);
+      } else {
+        alert("Falha no pagamento: " + data.errors[0].message);
+      }
+    } catch (error) {
+      console.error("Erro ao processar o pagamento:", error);
+      alert("Erro ao processar o pagamento. Tente novamente.");
+    }
+  }
+</script>
+
+</body>
+</html>
